@@ -1,4 +1,4 @@
-package com.anagram;
+package com.anagram.util;
 
 import java.util.Comparator;
 

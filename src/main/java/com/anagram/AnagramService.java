@@ -1,10 +1,11 @@
 package com.anagram;
 
+import com.anagram.util.StringComparator;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -39,6 +40,10 @@ public class AnagramService implements AnagramServiceMBean {
         for(int i=0; i<numberOfStripes; i++) {
             this.stripeLocks[i] = new ReentrantReadWriteLock();
         }
+    }
+
+    public AnagramService(int numberOfStripes, String dictionaryFilename) throws FileNotFoundException {
+        this(DEFAULT_CASE_SENSITIVE, numberOfStripes, dictionaryFilename);
     }
 
     public AnagramService(boolean caseSensitive, int numberOfStripes, String dictionaryFilename) throws FileNotFoundException {
