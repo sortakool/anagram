@@ -1,7 +1,5 @@
 package com.anagram;
 
-import com.anagram.util.StringComparator;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,7 +22,7 @@ public class AnagramService implements AnagramServiceMBean {
 
     private final Map<String, Set<String>> sortedWord2Anagrams = new HashMap<>();
     private boolean caseSensitive;
-    private final StringComparator stringComparator;
+    private final Comparator<String> stringComparator;
     private final int numberOfStripes;
     private final ReadWriteLock[] stripeLocks;
 
@@ -34,7 +32,7 @@ public class AnagramService implements AnagramServiceMBean {
 
     public AnagramService(boolean caseSensitive, int numberOfStripes) {
         this.caseSensitive = caseSensitive;
-        this.stringComparator = new StringComparator(caseSensitive);
+        this.stringComparator = this.caseSensitive ? null : String.CASE_INSENSITIVE_ORDER;
         this.numberOfStripes = numberOfStripes;
         this.stripeLocks = new ReadWriteLock[numberOfStripes];
         for(int i=0; i<numberOfStripes; i++) {
@@ -86,7 +84,7 @@ public class AnagramService implements AnagramServiceMBean {
             try {
                 Set<String> anagrams = sortedWord2Anagrams.get(sortedWord);
                 if(anagrams == null) {
-                    anagrams = new TreeSet<>(stringComparator);
+                    anagrams = caseSensitive ? new TreeSet<>() : new TreeSet<>(stringComparator);
                     sortedWord2Anagrams.put(sortedWord, anagrams);
                 }
                 added = anagrams.add(word);
@@ -96,7 +94,6 @@ public class AnagramService implements AnagramServiceMBean {
         }
         return added;
     }
-
 
 
     @Override

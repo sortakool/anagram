@@ -1,7 +1,13 @@
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+apply plugin: 'project-report'
+//apply plugin: 'distribution'
 
-sourceCompatibility = 1.5
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 version = '1.0'
 
 repositories {
@@ -10,4 +16,49 @@ repositories {
 
 dependencies {
     testCompile 'junit:junit:+'
+}
+
+jar.destinationDir = file("${project.buildDir}/lib")
+
+task createAllStartScripts() << {
+    // just a placeholder
+}
+def scripts =   [
+                    'jmxServer': 'com.anagram.server.jmx.AnagramServiceJMXServer',
+                    'jmxClient': 'com.anagram.client.AnagramClient',
+                    'localClient': 'com.anagram.client.AnagramClient'
+                ]
+scripts.each() { scriptName, className ->
+    def t = tasks.create(name: scriptName+'StartScript', type: CreateStartScripts) {
+        mainClassName = className
+        applicationName = scriptName
+        outputDir = new File(project.buildDir, 'scripts')
+        classpath = jar.outputs.files + project.configurations.runtime
+        switch (scriptName) {
+            case 'jmxServer':
+                defaultJvmOpts =    [
+                                        '-Dcom.sun.management.jmxremote',
+                                        '-Dcom.sun.management.jmxremote.local.only=false',
+                                        '-Dcom.sun.management.jmxremote.port=9999',
+                                        '-Dcom.sun.management.jmxremote.authenticate=false',
+                                        '-Dcom.sun.management.jmxremote.ssl=false',
+                                    ]
+                break;
+            case 'jmxClient':
+                defaultJvmOpts =    [
+                                        '-Danagram.service.factory.mode=JMX',
+                                    ]
+                break;
+            case 'localClient':
+                defaultJvmOpts =    [
+                                        '-Danagram.service.factory.mode=LOCAL',
+                                    ]
+                break;
+        }
+    }
+    applicationDistribution.into("bin") {
+        from(t)
+        fileMode = 0755
+    }
+    createAllStartScripts.dependsOn(t)
 }
