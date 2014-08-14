@@ -8,7 +8,7 @@ FROM
                                           from TRADES t2
                                           where t2.CustomerId = t.CustomerId
                                           group by t2.CustomerId, t2.TradeDate
-                                          having t2.TradeDate = date '2012-05-06'
+                                          having t2.TradeDate = date '2012-08-01'
                                         ) as NumberOfTrades
     from CUSTOMERS c left join Trades t on c.CustomerId = t.CustomerId
     group by c.CustomerId, c.CustomerName, t.CustomerId

@@ -44,16 +44,19 @@ scripts.each() { scriptName, className ->
                                         '-Dcom.sun.management.jmxremote.port=9999',
                                         '-Dcom.sun.management.jmxremote.authenticate=false',
                                         '-Dcom.sun.management.jmxremote.ssl=false',
+                                        '-Danagram.service.stripes.count=10'
                                     ]
                 break;
             case 'jmxClient':
                 defaultJvmOpts =    [
                                         '-Danagram.service.factory.mode=JMX',
+                                        '-Danagram.service.stripes.count=1'
                                     ]
                 break;
             case 'localClient':
                 defaultJvmOpts =    [
                                         '-Danagram.service.factory.mode=LOCAL',
+                                        '-Danagram.service.stripes.count=1'
                                     ]
                 break;
         }

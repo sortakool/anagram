@@ -5,10 +5,10 @@ import java.io.PrintStream;
 /**
  * Created by rmanaloto on 8/13/14.
  */
-public abstract  class ConsolePrinter {
+public abstract class ConsolePrinter {
 
     public static void print(PrintStream printStream, StringBuilder sb) {
-        for(int i=0; i<sb.length(); i++) {
+        for (int i = 0; i < sb.length(); i++) {
             printStream.print(sb.charAt(i));
         }
     }

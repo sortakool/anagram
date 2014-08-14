@@ -12,11 +12,13 @@ public class AnagramServiceFactory {
     public static final String DEFAULT_ANAGRAM_SERVICE_MBEAN_NAME = "com.anagram:type=AnagramService";
     public static final String DEFAULT_DICTIONARY_FILENAME = "words.txt";
     public static final String ANAGRAM_SERVICE_JMX_OBJECTNAME = "anagram.service.jmx.objectname";
+    public static final int DEFAULT_STRIPES_COUNT = 1;
 
     public enum Mode {
-        LOCAL, JMX, TCPIP;
+        LOCAL, JMX, TCP_IP;
     }
 
+    private int stripesCount = Integer.getInteger("anagram.service.stripes.count", DEFAULT_STRIPES_COUNT);
     private String dictionaryFileName = System.getProperty("anagram.service.factory.dictionary.filename", DEFAULT_DICTIONARY_FILENAME);
     private String jmxHost = System.getProperty("anagram.service.jmx.host", "localhost");
     private int jmxPort = Integer.getInteger("anagram.service.jmx.port", 9999);
@@ -28,6 +30,14 @@ public class AnagramServiceFactory {
 
     public AnagramServiceFactory(String dictionaryFileName) {
         this.dictionaryFileName = dictionaryFileName;
+    }
+
+    public int getStripesCount() {
+        return stripesCount;
+    }
+
+    public void setStripesCount(int stripesCount) {
+        this.stripesCount = stripesCount;
     }
 
     public String getDictionaryFileName() {
@@ -73,7 +83,8 @@ public class AnagramServiceFactory {
         switch(mode) {
             case LOCAL:
                 try {
-                    anagramService = new AnagramService(1, dictionaryFileName);
+                    anagramService = new AnagramService(stripesCount);
+                    AnagramServiceMBeanFileLoader.processFile(anagramService, dictionaryFileName);
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 }
@@ -86,7 +97,7 @@ public class AnagramServiceFactory {
                     throw new RuntimeException(e);
                 }
                 break;
-            case TCPIP:
+            case TCP_IP:
 
                 break;
         }
