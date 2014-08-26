@@ -1,11 +1,17 @@
 package com.anagram;
 
+import com.anagram.server.tcp.AnagramServiceSemaphoreTCPClient;
+import com.anagram.server.tcp.AnagramServiceTCPClient;
+import com.anagram.server.tcp.AnagramServiceTCPClientConfiguration;
+
 import javax.management.MalformedObjectNameException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
  * Created by rmanaloto on 8/13/14.
+ *
+ * Factory to create an instance of {@link com.anagram.AnagramServiceMBean}.
  */
 public class AnagramServiceFactory {
 
@@ -15,7 +21,7 @@ public class AnagramServiceFactory {
     public static final int DEFAULT_STRIPES_COUNT = 1;
 
     public enum Mode {
-        LOCAL, JMX, TCP_IP;
+        LOCAL, JMX, TCP;
     }
 
     private int stripesCount = Integer.getInteger("anagram.service.stripes.count", DEFAULT_STRIPES_COUNT);
@@ -78,6 +84,11 @@ public class AnagramServiceFactory {
         return sb.toString();
     }
 
+    /**
+     * Creates a {@link com.anagram.AnagramServiceMBean} based on the {@link com.anagram.AnagramServiceFactory.Mode} specified.
+     * @param mode
+     * @return
+     */
     public AnagramServiceMBean createAnagramService(Mode mode) {
         AnagramServiceMBean anagramService = null;
         switch(mode) {
@@ -97,8 +108,11 @@ public class AnagramServiceFactory {
                     throw new RuntimeException(e);
                 }
                 break;
-            case TCP_IP:
-
+            case TCP:
+                AnagramServiceTCPClientConfiguration configuration = new AnagramServiceTCPClientConfiguration();
+                anagramService = new AnagramServiceSemaphoreTCPClient(configuration);
+//                Thread thread = new Thread((AnagramServiceTCPClient)anagramService);
+//                thread.start();
                 break;
         }
         return anagramService;

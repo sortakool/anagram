@@ -8,12 +8,13 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Objects;
 import java.util.Set;
 
 /**
  * Created by rmanaloto on 8/13/14.
+ *
+ * Proxy implementation of {@link com.anagram.AnagramServiceMBean} that delegates all work to a JMX-backed service running on different JVM (and/or different server).
  */
 public class AnagramServiceJMXProxy implements AnagramServiceMBean {
 
@@ -41,18 +42,32 @@ public class AnagramServiceJMXProxy implements AnagramServiceMBean {
         Objects.nonNull(anagramService);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean add(String word) {
-        return anagramService.add(word);
+    public boolean addWord(String word) {
+        return anagramService.addWord(word);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean delete(String word) {
-        return anagramService.delete(word);
+    public boolean deleteWord(String word) {
+        return anagramService.deleteWord(word);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<String> getAnagrams(String word) {
         return anagramService.getAnagrams(word);
+    }
+
+    @Override
+    public void close() {
+
     }
 }

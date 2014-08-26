@@ -27,8 +27,10 @@ task createAllStartScripts() << {
 }
 def scripts =   [
                     'jmxServer': 'com.anagram.server.jmx.AnagramServiceJMXServer',
+                    'tcpServer': 'com.anagram.server.tcp.AnagramServiceTCPServer',
                     'jmxClient': 'com.anagram.client.AnagramClient',
-                    'localClient': 'com.anagram.client.AnagramClient'
+                    'localClient': 'com.anagram.client.AnagramClient',
+                    'tcpClient': 'com.anagram.client.AnagramClient'
                 ]
 scripts.each() { scriptName, className ->
     def t = tasks.create(name: scriptName+'StartScript', type: CreateStartScripts) {
@@ -58,6 +60,17 @@ scripts.each() { scriptName, className ->
                                         '-Danagram.service.factory.mode=LOCAL',
                                         '-Danagram.service.stripes.count=1'
                                     ]
+                break;
+            case 'tcpServer':
+                defaultJvmOpts =    [
+                                        '-Danagram.service.stripes.count=10'
+                                    ]
+                break;
+            case 'tcpClient':
+                defaultJvmOpts =    [
+                        '-Danagram.service.factory.mode=TCP',
+                        '-Danagram.service.stripes.count=1'
+                ]
                 break;
         }
     }

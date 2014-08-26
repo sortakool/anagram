@@ -2,7 +2,6 @@ package com.anagram.server.jmx;
 
 import com.anagram.AnagramServiceFactory;
 import com.anagram.AnagramServiceMBean;
-import com.anagram.util.ConsolePrinter;
 
 import javax.management.*;
 import java.lang.management.ManagementFactory;
@@ -12,6 +11,8 @@ import java.util.Set;
 
 /**
  * Created by rmanaloto on 8/13/14.
+ *
+ * Console application that registers a {@link com.anagram.AnagramServiceMBean} instance in a JMX MBean server.
  */
 public class AnagramServiceJMXServer {
 
@@ -46,18 +47,18 @@ public class AnagramServiceJMXServer {
         while (true) {
             sb.setLength(0);
             sb.append("Enter any command below:\n");
-            sb.append("[X]\tExit:");
-            ConsolePrinter.println(System.out, sb);
+            sb.append("[X]\tExit");
+            System.out.println(sb);
             sb.setLength(0);
             String command = scanner.nextLine();
             switch (command) {
                 case EXIT:
                     sb.append("Exiting...");
-                    ConsolePrinter.println(System.out, sb);
+                    System.out.println(sb);
                     return;
                 default:
                     sb.append("Invalid command '").append(command).append("'");
-                    ConsolePrinter.println(System.out, sb);
+                    System.out.println(sb);
                     break;
             }
         }

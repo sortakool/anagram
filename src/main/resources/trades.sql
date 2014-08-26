@@ -20,7 +20,7 @@ order by tmp.CustomerId
 
 -----------------------------------------------------------------------------------------------------------------------------
 -- 2. Provide a query that shows the trade details of the largest (= biggest quantity) trade done for each client.
---   The result set should show the customer name, instrument name, quantity, price, and trade date.
+--    The result set should show the customer name, instrument name, quantity, price, and trade date.
 -----------------------------------------------------------------------------------------------------------------------------
 
 -- this version filters out customers without any trades
